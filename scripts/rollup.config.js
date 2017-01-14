@@ -5,6 +5,16 @@ const config = {
   entry: 'lib/index.js',
   moduleName: 'VuexClass',
   plugins: [],
+  external: [
+    'vue',
+    'vuex',
+    'vue-class-component'
+  ],
+  globals: {
+    vue: 'Vue',
+    vuex: 'Vuex',
+    'vue-class-component': 'VueClassComponent'
+  },
   banner: `/*!
  * ${meta.name} v${meta.version}
  * ${meta.homepage}
