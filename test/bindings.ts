@@ -7,6 +7,7 @@ import {
   State,
   Getter,
   Action,
+  Mutation,
   namespace
 } from '../src/bindings'
 
@@ -147,6 +148,53 @@ describe('binding helpers', () => {
     class MyComp extends Vue {
       @FooAction('bar')
       baz: (payload: { value: number }) => void
+    }
+
+    const c = new MyComp({ store })
+    c.baz({ value: 1 })
+    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+  })
+
+  it('Mutation: type', () => {
+    const spy = sinon.spy()
+
+    const store = new Store({
+      mutations: {
+        foo: spy
+      }
+    })
+
+    @Component
+    class MyComp extends Vue {
+      @Mutation('foo')
+      bar: (payload: { value: number }) => void
+    }
+
+    const c = new MyComp({ store })
+    c.bar({ value: 1 })
+    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+  })
+
+  it('Mutation: namespace', () => {
+    const spy = sinon.spy()
+
+    const store = new Store({
+      modules: {
+        foo: {
+          namespaced: true,
+          mutations: {
+            bar: spy
+          }
+        }
+      }
+    })
+
+    const FooMutation = namespace('foo', Mutation)
+
+    @Component
+    class MyComp extends Vue {
+      @FooMutation('bar')
+      baz: (payload: { value: 1 }) => void
     }
 
     const c = new MyComp({ store })

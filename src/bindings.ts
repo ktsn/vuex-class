@@ -49,6 +49,12 @@ export const Action = createBindingHelper('methods', type => {
   }
 })
 
+export const Mutation = createBindingHelper('methods', type => {
+  return function (payload: any) {
+    return this.$store.commit(type, payload)
+  }
+})
+
 export function namespace <T extends BindingHelper> (
   namespace: string,
   helper: T
