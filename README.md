@@ -27,7 +27,7 @@ import {
   Action,
   Mutation,
   namespace
-} from 'vuex-class
+} from 'vuex-class'
 
 const ModuleGetter = namespace('path/to/module', Getter)
 
