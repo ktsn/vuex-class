@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "sourceMap": true
+  },
+  "include": [
+    "**/*.ts",
+    "../src/**/*.ts",
+    "../node_modules/@types/mocha/index.d.ts"
+  ]
+}

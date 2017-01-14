@@ -1,0 +1,58 @@
+{
+  "name": "vuex-class",
+  "version": "0.0.0",
+  "author": "katashin",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "main": "dist/vuex-class.cjs.js",
+  "jsnext:main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "homepage": "https://github.com/ktsn/vuex-class",
+  "bugs": "https://github.com/ktsn/vuex-class/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ktsn/vuex-class.git"
+  },
+  "scripts": {
+    "prepublish": "npm run test:ci && npm run clean && npm run build",
+    "clean": "rm -rf lib dist .tmp",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:dev && npm run build:prod",
+    "build:ts": "tsc -p src",
+    "build:cjs": "rollup -c scripts/rollup.config.js --environment BUILD:commonjs",
+    "build:dev": "rollup -c scripts/rollup.config.js --environment BUILD:development",
+    "build:prod": "rollup -c scripts/rollup.config.js --environment BUILD:production | uglifyjs -mc warnings=false --comments -o dist/vuex-class.min.js",
+    "watch:test": "webpack --watch --config scripts/webpack.config.test.js",
+    "lint": "tslint \"src/**/*.ts\" && tslint \"test/**/*.ts\"",
+    "test": "npm run watch:test & testem && kill %1",
+    "test:ci": "npm run lint && webpack --config scripts/webpack.config.test.js && testem ci --launch PhantomJS"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.32",
+    "@types/power-assert": "0.0.28",
+    "glob": "^7.1.0",
+    "json-loader": "^0.5.4",
+    "power-assert": "^1.4.1",
+    "rollup": "^0.41.1",
+    "rollup-plugin-replace": "^1.1.1",
+    "testem": "^1.12.0",
+    "ts-loader": "^1.0.0",
+    "tslint": "^4.0.0",
+    "tslint-config-ktsn": "^2.0.0",
+    "typescript": "^2.1.4",
+    "vue": "^2.1.8",
+    "vue-class-component": "^4.4.0",
+    "vuex": "^2.1.1",
+    "webpack": "^2.2.0-rc.2",
+    "webpack-espower-loader": "^1.0.1"
+  },
+  "peerDependencies": {
+    "vue": "^2.0.0",
+    "vuex": "^2.0.0",
+    "vue-class-component": "^4.3.0"
+  }
+}

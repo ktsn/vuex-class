@@ -1,0 +1,5 @@
+# vuex-class
+
+## License
+
+MIT
