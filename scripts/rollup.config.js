@@ -3,14 +3,14 @@ const meta = require('../package.json')
 
 const config = {
   entry: 'lib/index.js',
-  moduleName: 'Lib',
+  moduleName: 'VuexClass',
   plugins: [],
   banner: `/*!
  * ${meta.name} v${meta.version}
  * ${meta.homepage}
  *
  * @license
- * Copyright (c) 2016 ${meta.author}
+ * Copyright (c) 2017 ${meta.author}
  * Released under the MIT license
  * ${meta.homepage}/blob/master/LICENSE
  */`
