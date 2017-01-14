@@ -2,8 +2,12 @@
   "name": "vuex-class",
   "version": "0.0.0",
   "author": "katashin",
-  "description": "",
-  "keywords": [],
+  "description": "Binding helpers for Vuex and vue-class-component",
+  "keywords": [
+    "vue",
+    "vuex",
+    "bindings"
+  ],
   "license": "MIT",
   "main": "dist/vuex-class.cjs.js",
   "jsnext:main": "lib/index.js",
