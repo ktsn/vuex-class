@@ -1,10 +1,12 @@
 import assert = require('power-assert')
+import sinon = require('sinon')
 import Vue = require('vue')
 import { Store, install } from 'vuex'
 import Component from 'vue-class-component'
 import {
   State,
   Getter,
+  Action,
   namespace
 } from '../src/bindings'
 
@@ -103,5 +105,52 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     assert(c.baz === 2)
+  })
+
+  it('Action: type', () => {
+    const spy = sinon.spy()
+
+    const store = new Store({
+      actions: {
+        foo: spy
+      }
+    })
+
+    @Component
+    class MyComp extends Vue {
+      @Action('foo')
+      bar: (payload: { value: number }) => void
+    }
+
+    const c = new MyComp({ store })
+    c.bar({ value: 1 })
+    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+  })
+
+  it('Action: namespace', () => {
+    const spy = sinon.spy()
+
+    const store = new Store({
+      modules: {
+        foo: {
+          namespaced: true,
+          actions: {
+            bar: spy
+          }
+        }
+      }
+    })
+
+    const FooAction = namespace('foo', Action)
+
+    @Component
+    class MyComp extends Vue {
+      @FooAction('bar')
+      baz: (payload: { value: number }) => void
+    }
+
+    const c = new MyComp({ store })
+    c.baz({ value: 1 })
+    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
   })
 })

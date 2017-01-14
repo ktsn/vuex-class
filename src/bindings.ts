@@ -43,6 +43,12 @@ export const Getter = createBindingHelper('computed', type => {
   }
 })
 
+export const Action = createBindingHelper('methods', type => {
+  return function (payload: any) {
+    return this.$store.dispatch(type, payload)
+  }
+})
+
 export function namespace <T extends BindingHelper> (
   namespace: string,
   helper: T
