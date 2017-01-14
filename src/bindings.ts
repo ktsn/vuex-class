@@ -37,6 +37,12 @@ export const State: StateBindingHelper = (
   })
 }
 
+export const Getter = createBindingHelper('computed', type => {
+  return function () {
+    return this.$store.getters[type]
+  }
+})
+
 export function namespace <T extends BindingHelper> (
   namespace: string,
   helper: T
@@ -44,4 +50,34 @@ export function namespace <T extends BindingHelper> (
   return (typeOrFn: any) => {
     return helper(typeOrFn, { namespace })
   }
+}
+
+function createBindingHelper (
+  bindTo: 'computed' | 'methods',
+  fn: (type: string) => (this: Vue, ...args: any[]) => any
+): BindingHelper {
+  return (type, options?) => {
+    const namespace = extractNamespace(options)
+
+    return createDecorator((componentOptions, key) => {
+      if (!componentOptions[bindTo]) {
+        componentOptions[bindTo] = {}
+      }
+      componentOptions[bindTo]![key] = fn(namespace + type)
+    })
+  }
+}
+
+function extractNamespace (options: BindingOptions | undefined): string {
+  const n = options && options.namespace
+
+  if (typeof n !== 'string') {
+    return ''
+  }
+
+  if (n[n.length - 1] !== '/') {
+    return n + '/'
+  }
+
+  return n
 }
