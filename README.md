@@ -40,6 +40,13 @@ export class MyComp extends Vue {
   @Mutation('foo') mutationFoo
   @ModuleGetter('foo') moduleGetterFoo
 
+  // If the argument is omitted, use the property name
+  // for each state/getter/action/mutation type
+  @State foo
+  @Getter bar
+  @Action baz
+  @Mutation qux
+
   created () {
     this.stateFoo // -> store.state.foo
     this.stateBar // -> store.state.bar
