@@ -52,7 +52,7 @@
     "tslint-config-ktsn": "^2.0.0",
     "typescript": "^2.1.4",
     "vue": "^2.1.8",
-    "vue-class-component": "^4.4.0",
+    "vue-class-component": "^5.0.1",
     "vuex": "^2.1.1",
     "webpack": "^2.2.0-rc.2",
     "webpack-espower-loader": "^1.0.1"
@@ -60,6 +60,6 @@
   "peerDependencies": {
     "vue": "^2.0.0",
     "vuex": "^2.0.0",
-    "vue-class-component": "^4.3.0"
+    "vue-class-component": "^5.0.1"
   }
 }
