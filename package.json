@@ -1,6 +1,6 @@
 {
   "name": "vuex-class",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": "katashin",
   "description": "Binding helpers for Vuex and vue-class-component",
   "keywords": [
