@@ -1,7 +1,7 @@
 import assert = require('power-assert')
 import sinon = require('sinon')
-import Vue = require('vue')
-import { Store, install } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import Component from 'vue-class-component'
 import {
   State,
@@ -12,10 +12,10 @@ import {
 } from '../src/bindings'
 
 describe('binding helpers', () => {
-  Vue.use(install)
+  Vue.use(Vuex)
 
   it('State: type', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       state: { value: 1 }
     })
 
@@ -29,7 +29,7 @@ describe('binding helpers', () => {
   })
 
   it('State: function', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       state: { value: 1 }
     })
 
@@ -45,7 +45,7 @@ describe('binding helpers', () => {
   })
 
   it('State: implicit state name', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       state: { value: 1 }
     })
 
@@ -59,7 +59,7 @@ describe('binding helpers', () => {
   })
 
   it('State: namespace', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       modules: {
         foo: {
           namespaced: true,
@@ -84,7 +84,7 @@ describe('binding helpers', () => {
   })
 
   it('Getter: type', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       state: { value: 1 },
       getters: {
         foo: state => state.value + 1
@@ -102,7 +102,7 @@ describe('binding helpers', () => {
   })
 
   it('Getter: implicit getter type', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       state: { value: 1 },
       getters: {
         foo: state => state.value + 1
@@ -119,7 +119,7 @@ describe('binding helpers', () => {
   })
 
   it('Getter: namespace', () => {
-    const store = new Store({
+    const store = new Vuex.Store({
       modules: {
         foo: {
           namespaced: true,
@@ -149,7 +149,7 @@ describe('binding helpers', () => {
   it('Action: type', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       actions: {
         foo: spy
       }
@@ -169,7 +169,7 @@ describe('binding helpers', () => {
   it('Action: implicity action type', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       actions: {
         foo: spy
       }
@@ -188,7 +188,7 @@ describe('binding helpers', () => {
   it('Action: namespace', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       modules: {
         foo: {
           namespaced: true,
@@ -220,7 +220,7 @@ describe('binding helpers', () => {
   it('Mutation: type', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       mutations: {
         foo: spy
       }
@@ -240,7 +240,7 @@ describe('binding helpers', () => {
   it('Mutation: implicit mutation type', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       mutations: {
         foo: spy
       }
@@ -259,7 +259,7 @@ describe('binding helpers', () => {
   it('Mutation: namespace', () => {
     const spy = sinon.spy()
 
-    const store = new Store({
+    const store = new Vuex.Store({
       modules: {
         foo: {
           namespaced: true,

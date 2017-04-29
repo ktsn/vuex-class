@@ -1,4 +1,4 @@
-import * as Vue from 'vue'
+import Vue from 'vue'
 import { createDecorator } from 'vue-class-component'
 import {
   mapState,
