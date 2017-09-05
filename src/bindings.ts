@@ -40,13 +40,13 @@ export function namespace <T extends BindingHelper> (
   helper: T
 ): T {
   // T is BindingHelper or StateBindingHelper
-  function namespacedHelper (proto: Vue, key: string): void
+  function namespacedHelper (proto: Vue, key: string, originKey?: string): void
   function namespacedHelper (type: any, options?: BindingOptions): VuexDecorator
-  function namespacedHelper (a: Vue | any, b?: string | BindingOptions): VuexDecorator | void {
+  function namespacedHelper (a: Vue | any, b?: string | BindingOptions, originKey?: string): VuexDecorator | void {
     if (typeof b === 'string') {
       const key: string = b
       const proto: Vue = a
-      return helper(key, { namespace })(proto, key)
+      return helper(originKey || key, { namespace })(proto, key)
     }
 
     const type = a
@@ -75,13 +75,13 @@ function createBindingHelper (
     })
   }
 
-  function helper (proto: Vue, key: string): void
+  function helper (proto: Vue, key: string, originKey?: string): void
   function helper (type: any, options?: BindingOptions): VuexDecorator
-  function helper (a: Vue | any, b?: string | BindingOptions): VuexDecorator | void {
+  function helper (a: Vue | any, b?: string | BindingOptions, originKey?: string): VuexDecorator | void {
     if (typeof b === 'string') {
       const key: string = b
       const proto: Vue = a
-      return makeDecorator(key, undefined)(proto, key)
+      return makeDecorator(originKey || key, undefined)(proto, key)
     }
 
     const namespace = extractNamespace(b)
