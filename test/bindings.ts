@@ -1,4 +1,4 @@
-import assert = require('power-assert')
+import chai = require('chai')
 import sinon = require('sinon')
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -10,6 +10,9 @@ import {
   Mutation,
   namespace
 } from '../src/bindings'
+
+const assert = chai.assert
+const expect = chai.expect
 
 describe('binding helpers', () => {
   Vue.use(Vuex)
@@ -163,7 +166,7 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     c.bar({ value: 1 })
-    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+    expect(spy.getCall(0).args[1]).deep.equal({ value: 1 })
   })
 
   it('Action: implicity action type', () => {
@@ -212,9 +215,9 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     c.baz({ value: 1 })
-    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+    expect(spy.getCall(0).args[1]).deep.equal({ value: 1 })
     c.bar({ value: 2 })
-    assert.deepStrictEqual(spy.getCall(1).args[1], { value: 2 })
+    expect(spy.getCall(1).args[1]).deep.equal({ value: 2 })
   })
 
   it('Mutation: type', () => {
@@ -234,7 +237,7 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     c.bar({ value: 1 })
-    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+    expect(spy.getCall(0).args[1]).deep.equal({ value: 1 })
   })
 
   it('Mutation: implicit mutation type', () => {
@@ -283,8 +286,8 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     c.baz({ value: 1 })
-    assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
+    expect(spy.getCall(0).args[1]).deep.equal({ value: 1 })
     c.bar({ value: 2 })
-    assert.deepStrictEqual(spy.getCall(1).args[1], { value: 2 })
+    expect(spy.getCall(1).args[1]).deep.equal({ value: 2 })
   })
 })
