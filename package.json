@@ -23,7 +23,7 @@
     "url": "https://github.com/ktsn/vuex-class.git"
   },
   "scripts": {
-    "prepublish": "npm run test:ci && npm run clean && npm run build",
+    "prepublishOnly": "npm run test:ci && npm run clean && npm run build",
     "clean": "rm -rf lib dist .tmp",
     "build": "npm run build:ts && npm run build:cjs && npm run build:dev && npm run build:prod",
     "build:ts": "tsc -p src",
