@@ -8,10 +8,6 @@
       "dom",
       "es2015"
     ],
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true
+    "strict": true
   }
 }

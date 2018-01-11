@@ -52,9 +52,9 @@
     "tslint-config-ktsn": "^2.1.0",
     "typescript": "^2.5.3",
     "uglify-js": "^3.1.4",
-    "vue": "^2.5.2",
-    "vue-class-component": "^6.0.0",
-    "vuex": "^3.0.0",
+    "vue": "^2.5.13",
+    "vue-class-component": "^6.1.2",
+    "vuex": "github:ktsn/vuex#cfb6042",
     "webpack": "^3.8.1",
     "webpack-espower-loader": "^1.0.2"
   },
