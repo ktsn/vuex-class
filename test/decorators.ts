@@ -9,7 +9,7 @@ import {
   Action,
   Mutation,
   namespace
-} from '../src/bindings'
+} from '../src/decorators'
 
 describe('binding helpers', () => {
   Vue.use(Vuex)

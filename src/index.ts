@@ -4,4 +4,4 @@ export {
   Action,
   Mutation,
   namespace
-} from './bindings'
+} from './decorators'
