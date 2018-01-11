@@ -1,14 +1,14 @@
 import Vue, { VueConstructor, ComponentOptions } from 'vue'
 import { mapValues } from './utils'
 
-interface Class<Instance> {
+export interface Class<Instance> {
   new (...args: any[]): Instance
 }
 
-type MutationMethod<P> = (payload: P) => void
-type ActionMethod<P> = (payload: P) => Promise<any>
+export type MutationMethod<P> = (payload: P) => void
+export type ActionMethod<P> = (payload: P) => Promise<any>
 
-interface BoundClass<Instance extends Vue, State, Getters, Mutations, Actions> extends VueConstructor {
+export interface BoundClass<Instance extends Vue, State, Getters, Mutations, Actions> extends VueConstructor {
   state<Key extends keyof State>(map: Key[]): this & Class<{ [K in Key]: State[K] }>
   state<Map extends Record<string, keyof State>>(map: Map): this & Class<{ [K in keyof Map]: State[Map[K]] }>
 }
