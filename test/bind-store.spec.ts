@@ -79,4 +79,34 @@ describe('bindStore', () => {
     store.state.count++
     assert(vm.value === 1)
   })
+
+  it('binds getters', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .getters(['double'])
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    assert(vm.double === 0)
+    store.state.count++
+    assert(vm.double === 2)
+  })
+
+  it('binds getters by using object mapper', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .getters({
+        multiply2: 'double'
+      })
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    assert(vm.multiply2 === 0)
+    store.state.count++
+    assert(vm.multiply2 === 2)
+  })
 })

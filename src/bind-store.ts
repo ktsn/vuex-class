@@ -13,6 +13,9 @@ export interface StoreBinder<Instance extends Vue, State, Getters, Mutations, Ac
 
   state<Key extends keyof State>(map: Key[]): StoreBinder<Instance & { [K in Key]: State[K] }, State, Getters, Mutations, Actions>
   state<Map extends Record<string, keyof State>>(map: Map): StoreBinder<Instance & { [K in keyof Map]: State[Map[K]] }, State, Getters, Mutations, Actions>
+
+  getters<Key extends keyof Getters>(map: Key[]): StoreBinder<Instance & { [K in Key]: Getters[K] }, State, Getters, Mutations, Actions>
+  getters<Map extends Record<string, keyof Getters>>(map: Map): StoreBinder<Instance & { [K in keyof Map]: Getters[Map[K]] }, State, Getters, Mutations, Actions>
 }
 
 export function bindStore<State, Getters, Mutations, Actions>(namespace?: string): StoreBinder<Vue, State, Getters, Mutations, Actions> {
@@ -21,6 +24,11 @@ export function bindStore<State, Getters, Mutations, Actions>(namespace?: string
   const binder: StoreBinder<Vue, never, never, never, never> = {
     state(map: string[] | Record<string, string>) {
       options.computed = mapPoly(map, value => makeComputed(value, 'state'))
+      return binder
+    },
+
+    getters(map: string[] | Record<string, string>) {
+      options.computed = mapPoly(map, value => makeComputed(value, 'getters'))
       return binder
     },
 
