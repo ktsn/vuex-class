@@ -1,4 +1,5 @@
 import * as assert from 'power-assert'
+import * as td from 'testdouble'
 import Component from 'vue-class-component'
 import { Store, DefineModule } from 'vuex'
 import { bindStore } from '../src/bind-store'
@@ -30,16 +31,10 @@ const counter: DefineModule<State, Getters, Mutations, Actions> = {
     double: state => state.count * 2
   },
   mutations: {
-    increment (state, n) {
-      state.count += n
-    }
+    increment: td.function() as any
   },
   actions: {
-    incrementAsync ({ commit }, { delay, amount }) {
-      setTimeout(() => {
-        commit('increment', amount)
-      }, delay)
-    }
+    incrementAsync: td.function() as any
   }
 }
 
@@ -108,5 +103,77 @@ describe('bindStore', () => {
     assert(vm.multiply2 === 0)
     store.state.count++
     assert(vm.multiply2 === 2)
+  })
+
+  it('binds mutations', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .mutations(['increment'])
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    vm.increment(123)
+    td.verify(counter.mutations!.increment(
+      td.matchers.anything(),
+      123
+    ))
+  })
+
+  it('binds mutations by using object mapper', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .mutations({
+        plus: 'increment'
+      })
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    vm.plus(123)
+    td.verify(counter.mutations!.increment(
+      td.matchers.anything(),
+      123
+    ))
+  })
+
+  it('binds actions', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .actions(['incrementAsync'])
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    vm.incrementAsync({ delay: 100, amount: 42 })
+    td.verify(counter.actions!.incrementAsync(
+      td.matchers.anything(),
+      { delay: 100, amount: 42 }
+    ), {
+      ignoreExtraArgs: true
+    })
+  })
+
+  it('binds actions by using object mapper', () => {
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .actions({
+        delayedPlus: 'incrementAsync'
+      })
+      .create()
+
+    @Component
+    class Test extends Super {}
+
+    const vm = new Test({ store })
+    vm.delayedPlus({ delay: 100, amount: 42 })
+    td.verify(counter.actions!.incrementAsync(
+      td.matchers.anything(),
+      { delay: 100, amount: 42 }
+    ), {
+      ignoreExtraArgs: true
+    })
   })
 })
