@@ -19,31 +19,37 @@ export interface StoreBinder<Instance extends Vue, State, Getters, Mutations, Ac
 }
 
 export function bindStore<State, Getters, Mutations, Actions>(namespace?: string): StoreBinder<Vue, State, Getters, Mutations, Actions> {
-  const options: ComponentOptions<Vue> = {}
+  return createBinder({})
+}
 
-  const binder: StoreBinder<Vue, never, never, never, never> = {
+function createBinder(options: ComponentOptions<Vue>): StoreBinder<Vue, {}, {}, {}, {}> {
+  return {
     state(map: string[] | Record<string, string>) {
-      options.computed = merge(
+      const computed = merge(
         options.computed || {},
         mapPoly(map, value => makeComputed(value, 'state'))
       )
-      return binder
+
+      const newOptions = merge(options, { computed })
+
+      return createBinder(newOptions)
     },
 
     getters(map: string[] | Record<string, string>) {
-      options.computed = merge(
+      const computed = merge(
         options.computed || {},
         mapPoly(map, value => makeComputed(value, 'getters'))
       )
-      return binder
+
+      const newOptions = merge(options, { computed })
+
+      return createBinder(newOptions)
     },
 
     create() {
       return Vue.extend(options)
     }
   }
-
-  return binder
 }
 
 function mapPoly<R>(
