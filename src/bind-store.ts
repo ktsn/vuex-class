@@ -8,22 +8,28 @@ export interface Class<Instance> {
 export type MutationMethod<P> = (payload: P) => void
 export type ActionMethod<P> = (payload: P) => Promise<any>
 
-export interface BoundClass<Instance extends Vue, State, Getters, Mutations, Actions> extends VueConstructor {
-  state<Key extends keyof State>(map: Key[]): this & Class<{ [K in Key]: State[K] }>
-  state<Map extends Record<string, keyof State>>(map: Map): this & Class<{ [K in keyof Map]: State[Map[K]] }>
+export interface StoreBinder<Instance extends Vue, State, Getters, Mutations, Actions> {
+  create(): Class<Instance> & typeof Vue
+
+  state<Key extends keyof State>(map: Key[]): StoreBinder<Instance & { [K in Key]: State[K] }, State, Getters, Mutations, Actions>
+  state<Map extends Record<string, keyof State>>(map: Map): StoreBinder<Instance & { [K in keyof Map]: State[Map[K]] }, State, Getters, Mutations, Actions>
 }
 
-export function bindStore<State, Getters, Mutations, Actions>(namespace?: string): BoundClass<Vue, State, Getters, Mutations, Actions> {
-  const BoundClass: BoundClass<Vue, State, Getters, Mutations, Actions> & { options: ComponentOptions<never> } = Vue.extend() as any
+export function bindStore<State, Getters, Mutations, Actions>(namespace?: string): StoreBinder<Vue, State, Getters, Mutations, Actions> {
+  const options: ComponentOptions<Vue> = {}
 
-  BoundClass.state = function state(map: string[] | Record<string, string>) {
-    BoundClass.options.computed = mapPoly(map, value => {
-      return makeComputed(value, 'state')
-    })
-    return BoundClass
+  const binder: StoreBinder<Vue, never, never, never, never> = {
+    state(map: string[] | Record<string, string>) {
+      options.computed = mapPoly(map, value => makeComputed(value, 'state'))
+      return binder
+    },
+
+    create() {
+      return Vue.extend(options)
+    }
   }
 
-  return BoundClass
+  return binder
 }
 
 function mapPoly<R>(

@@ -51,7 +51,9 @@ describe('bindStore', () => {
   })
 
   it('binds states', () => {
-    const Super = bindStore<State, Getters, Mutations, Actions>().state(['count'])
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .state(['count'])
+      .create()
 
     @Component
     class Test extends Super {}
@@ -63,9 +65,11 @@ describe('bindStore', () => {
   })
 
   it('binds state by using object mapper', () => {
-    const Super = bindStore<State, Getters, Mutations, Actions>().state({
-      value: 'count'
-    })
+    const Super = bindStore<State, Getters, Mutations, Actions>()
+      .state({
+        value: 'count'
+      })
+      .create()
 
     @Component
     class Test extends Super {}
