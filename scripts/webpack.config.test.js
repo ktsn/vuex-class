@@ -2,7 +2,8 @@ const path = require('path')
 const glob = require('glob')
 
 module.exports = {
-  entry: ['es6-promise/auto'].concat(glob.sync(path.resolve(__dirname, '../test/**/*.ts'))),
+  entry: ['es6-promise/auto', path.resolve(__dirname, '../test/setup.ts')]
+    .concat(glob.sync(path.resolve(__dirname, '../test/**/*.spec.ts'))),
   output: {
     path: path.resolve(__dirname, '../.tmp'),
     filename: 'test.js'

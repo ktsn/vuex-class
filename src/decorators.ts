@@ -6,13 +6,16 @@ import {
   mapActions,
   mapMutations
 } from 'vuex'
+import { merge } from './utils'
 
 export type VuexDecorator = <V extends Vue> (proto: V, key: string) => void
 
 export type StateTransformer = (state: any, getters: any) => any
 
-export type MapHelper = typeof mapState | typeof mapGetters
-  | typeof mapActions | typeof mapMutations
+export interface MapHelper {
+  (map: string[] | Record<string, string>): Record<string, any>
+  (namespace: string, map: string[] | Record<string, string>): Record<string, any>
+}
 
 export interface BindingOptions {
   namespace?: string
@@ -104,14 +107,4 @@ function extractNamespace (options: BindingOptions | undefined): string | undefi
   }
 
   return n
-}
-
-function merge <T, U> (a: T, b: U): T & U {
-  const res: any = {}
-  ;[a, b].forEach((obj: any) => {
-    Object.keys(obj).forEach(key => {
-      res[key] = obj[key]
-    })
-  })
-  return res
 }

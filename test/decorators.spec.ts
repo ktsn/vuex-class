@@ -9,11 +9,9 @@ import {
   Action,
   Mutation,
   namespace
-} from '../src/bindings'
+} from '../src/decorators'
 
 describe('binding helpers', () => {
-  Vue.use(Vuex)
-
   it('State: type', () => {
     const store = new Vuex.Store({
       state: { value: 1 }
