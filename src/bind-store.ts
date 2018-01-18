@@ -1,5 +1,5 @@
 import Vue, { VueConstructor, ComponentOptions } from 'vue'
-import { mapValues } from './utils'
+import { merge, mapValues } from './utils'
 
 export interface Class<Instance> {
   new (...args: any[]): Instance
@@ -23,12 +23,18 @@ export function bindStore<State, Getters, Mutations, Actions>(namespace?: string
 
   const binder: StoreBinder<Vue, never, never, never, never> = {
     state(map: string[] | Record<string, string>) {
-      options.computed = mapPoly(map, value => makeComputed(value, 'state'))
+      options.computed = merge(
+        options.computed || {},
+        mapPoly(map, value => makeComputed(value, 'state'))
+      )
       return binder
     },
 
     getters(map: string[] | Record<string, string>) {
-      options.computed = mapPoly(map, value => makeComputed(value, 'getters'))
+      options.computed = merge(
+        options.computed || {},
+        mapPoly(map, value => makeComputed(value, 'getters'))
+      )
       return binder
     },
 
