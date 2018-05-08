@@ -68,14 +68,14 @@ describe('binding helpers', () => {
       }
     })
 
-    const FooState = namespace('foo', State)
+    const foo = namespace('foo')
 
     @Component
     class MyComp extends Vue {
-      @FooState('value')
+      @foo.State('value')
       bar: number
 
-      @FooState value: number
+      @foo.State value: number
     }
 
     const c = new MyComp({ store })
@@ -131,14 +131,14 @@ describe('binding helpers', () => {
       }
     })
 
-    const FooGetter = namespace('foo', Getter)
+    const foo = namespace('foo')
 
     @Component
     class MyComp extends Vue {
-      @FooGetter('bar')
+      @foo.Getter('bar')
       baz: number
 
-      @FooGetter bar: number
+      @foo.Getter bar: number
     }
 
     const c = new MyComp({ store })
@@ -199,14 +199,14 @@ describe('binding helpers', () => {
       }
     })
 
-    const FooAction = namespace('foo', Action)
+    const foo = namespace('foo')
 
     @Component
     class MyComp extends Vue {
-      @FooAction('bar')
+      @foo.Action('bar')
       baz: (payload: { value: number }) => void
 
-      @FooAction
+      @foo.Action
       bar: (payload: { value: number }) => void
     }
 
@@ -270,14 +270,14 @@ describe('binding helpers', () => {
       }
     })
 
-    const FooMutation = namespace('foo', Mutation)
+    const foo = namespace('foo')
 
     @Component
     class MyComp extends Vue {
-      @FooMutation('bar')
+      @foo.Mutation('bar')
       baz: (payload: { value: number }) => void
 
-      @FooMutation
+      @foo.Mutation
       bar: (payload: { value: number }) => void
     }
 

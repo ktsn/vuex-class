@@ -27,6 +27,13 @@ export interface StateBindingHelper extends BindingHelper {
   (type: StateTransformer, options?: BindingOptions): VuexDecorator
 }
 
+export interface BindingHelpers {
+  State: StateBindingHelper
+  Getter: BindingHelper
+  Mutation: BindingHelper
+  Action: BindingHelper
+}
+
 export const State = createBindingHelper('computed', mapState) as StateBindingHelper
 
 export const Getter = createBindingHelper('computed', mapGetters)
@@ -35,26 +42,45 @@ export const Action = createBindingHelper('methods', mapActions)
 
 export const Mutation = createBindingHelper('methods', mapMutations)
 
+export function namespace (namespace: string): BindingHelpers
 export function namespace <T extends BindingHelper> (
   namespace: string,
   helper: T
-): T {
-  // T is BindingHelper or StateBindingHelper
-  function namespacedHelper (proto: Vue, key: string): void
-  function namespacedHelper (type: any, options?: BindingOptions): VuexDecorator
-  function namespacedHelper (a: Vue | any, b?: string | BindingOptions): VuexDecorator | void {
-    if (typeof b === 'string') {
-      const key: string = b
-      const proto: Vue = a
-      return helper(key, { namespace })(proto, key)
+): T
+export function namespace <T extends BindingHelper> (
+  namespace: string,
+  helper?: T
+): any {
+  function createNamespacedHelper (helper: T): T {
+    // T is BindingHelper or StateBindingHelper
+    function namespacedHelper (proto: Vue, key: string): void
+    function namespacedHelper (type: any, options?: BindingOptions): VuexDecorator
+    function namespacedHelper (a: Vue | any, b?: string | BindingOptions): VuexDecorator | void {
+      if (typeof b === 'string') {
+        const key: string = b
+        const proto: Vue = a
+        return helper(key, { namespace })(proto, key)
+      }
+
+      const type = a
+      const options = merge(b || {}, { namespace })
+      return helper(type, options)
     }
 
-    const type = a
-    const options = merge(b || {}, { namespace })
-    return helper(type, options)
+    return namespacedHelper as T
   }
 
-  return namespacedHelper as T
+  if (helper) {
+    console.warn('[vuex-class] passing the 2nd argument to `namespace` function is deprecated. pass only namespace string instead.')
+    return createNamespacedHelper(helper)
+  }
+
+  return {
+    State: createNamespacedHelper(State as any),
+    Getter: createNamespacedHelper(Getter as any),
+    Mutation: createNamespacedHelper(Mutation as any),
+    Action: createNamespacedHelper(Action as any)
+  }
 }
 
 function createBindingHelper (
