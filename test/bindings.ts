@@ -11,6 +11,9 @@ import {
   namespace
 } from '../src/bindings'
 
+Vue.config.productionTip = false
+Vue.config.devtools = false
+
 describe('binding helpers', () => {
   Vue.use(Vuex)
 
