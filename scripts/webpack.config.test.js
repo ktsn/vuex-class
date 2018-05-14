@@ -2,6 +2,7 @@ const path = require('path')
 const glob = require('glob')
 
 module.exports = {
+  mode: 'development',
   entry: ['es6-promise/auto'].concat(glob.sync(path.resolve(__dirname, '../test/**/*.ts'))),
   output: {
     path: path.resolve(__dirname, '../.tmp'),
