@@ -23,17 +23,18 @@
     "url": "https://github.com/ktsn/vuex-class.git"
   },
   "scripts": {
-    "prepublishOnly": "npm run test:ci && npm run clean && npm run build",
+    "prepublishOnly": "run-s lint test clean build",
     "clean": "rm -rf lib dist .tmp",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:dev && npm run build:prod",
+    "build": "run-p build:ts build:cjs build:dev build:prod",
     "build:ts": "tsc -p src",
     "build:cjs": "rollup -c scripts/rollup.config.js --environment BUILD:commonjs",
     "build:dev": "rollup -c scripts/rollup.config.js --environment BUILD:development",
     "build:prod": "rollup -c scripts/rollup.config.js --environment BUILD:production | uglifyjs -mc warnings=false --comments -o dist/vuex-class.min.js",
     "watch:test": "webpack --watch --config scripts/webpack.config.test.js",
     "lint": "tslint \"src/**/*.ts\" && tslint \"test/**/*.ts\"",
-    "test": "npm run watch:test & testem && kill %1",
-    "test:ci": "npm run lint && webpack --config scripts/webpack.config.test.js && testem ci --launch PhantomJS"
+    "testem": "testem",
+    "dev": "run-p watch:test testem",
+    "test": "webpack --config scripts/webpack.config.test.js && testem ci"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
@@ -42,6 +43,7 @@
     "es6-promise": "^4.2.4",
     "glob": "^7.1.2",
     "json-loader": "^0.5.7",
+    "npm-run-all": "^4.1.3",
     "power-assert": "^1.5.0",
     "rollup": "^0.58.2",
     "rollup-plugin-replace": "^2.0.0",
