@@ -34,7 +34,7 @@
     "lint": "tslint \"src/**/*.ts\" && tslint \"test/**/*.ts\"",
     "testem": "testem",
     "dev": "run-p watch:test testem",
-    "test": "webpack --config scripts/webpack.config.test.js && testem ci"
+    "test": "webpack --config scripts/webpack.config.test.js && testem ci --launch PhantomJS"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
