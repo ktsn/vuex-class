@@ -58,6 +58,16 @@ export class MyComp extends Vue {
 }
 ```
 
+## Issue Reporting Guideline
+
+### Questions
+
+For general usage question which is not related to vuex-class should be posted to [StackOverflow](https://stackoverflow.com/) or other Q&A forum. Such questions will be closed without an answer.
+
+### Bug Reports
+
+Please make sure to provide minimal and self-contained reproduction when you report a bug. Otherwise the issue will be closed immediately.
+
 ## License
 
 MIT
