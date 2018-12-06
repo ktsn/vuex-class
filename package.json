@@ -25,7 +25,7 @@
   "scripts": {
     "prepublishOnly": "run-s lint test clean build",
     "clean": "rm -rf lib dist .tmp",
-    "build": "run-p build:ts build:cjs build:dev build:prod",
+    "build": "run-s build:ts build:cjs build:dev build:prod",
     "build:ts": "tsc -p src",
     "build:cjs": "rollup -c scripts/rollup.config.js --environment BUILD:commonjs",
     "build:dev": "rollup -c scripts/rollup.config.js --environment BUILD:development",
