@@ -1,12 +1,7 @@
 language: node_js
 node_js:
-  - "6"
-cache:
-  directories:
-    - $HOME/.npm
-    - node_modules
-install:
-  - npm i --cache-min 600000
+  - "10"
+cache: npm
 script:
   - npm run lint
   - npm run test
