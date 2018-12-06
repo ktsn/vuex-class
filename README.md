@@ -1,5 +1,7 @@
 # vuex-class
 
+[![vuex-class Dev Token](https://badge.devtoken.rocks/vuex-class)](https://devtoken.rocks/package/vuex-class)
+
 Binding helpers for Vuex and vue-class-component
 
 ## Dependencies
