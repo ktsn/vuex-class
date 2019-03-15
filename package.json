@@ -64,6 +64,6 @@
   "peerDependencies": {
     "vue": "^2.5.0",
     "vuex": "^3.0.0",
-    "vue-class-component": "^6.0.0"
+    "vue-class-component": "^6.0.0 || ^7.0.0"
   }
 }
