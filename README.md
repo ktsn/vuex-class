@@ -18,6 +18,61 @@ $ npm install --save vuex-class
 $ yarn add vuex-class
 ```
 
+## Usage
+
+### State
+
+#### Flat state
+
+```js
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { State } from 'vuex-class'
+
+@Component
+export class MyComp extends Vue {
+  @State('foo') stateFoo
+
+  // If the argument is omitted, use the state property name
+  @State bar
+
+  created () {
+    this.stateFoo // -> store.state.foo
+    this.bar // -> store.state.bar
+  }
+}
+```
+
+#### Nested state
+
+Using the dot notation to access a nested state property doesn't work.
+
+```js
+@State('state.bar') stateBar
+```
+
+Why doesn't the library support this feature?
+
+- It's impossible to type check.
+- It would provide poor error message if there is typo on property name.
+
+You need to use a lambda function instead.
+
+```js
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { State } from 'vuex-class'
+
+@Component
+export class MyComp extends Vue {
+  @State(state => state.bar) stateBar
+
+  created () {
+    this.stateBar // -> store.state.bar
+  }
+}
+```
+
 ## Example
 
 ```js
