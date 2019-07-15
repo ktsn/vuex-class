@@ -9,7 +9,7 @@ import {
 
 export type VuexDecorator = <V extends Vue> (proto: V, key: string) => void
 
-export type StateTransformer = (state: any, getters: any) => any
+export type StateTransformer<S, G> = (state: S, getters: G) => any
 
 export type MapHelper = typeof mapState | typeof mapGetters
   | typeof mapActions | typeof mapMutations
@@ -23,18 +23,18 @@ export interface BindingHelper {
   (type: string, options?: BindingOptions): VuexDecorator
 }
 
-export interface StateBindingHelper extends BindingHelper {
-  (type: StateTransformer, options?: BindingOptions): VuexDecorator
+export interface StateBindingHelper<S = any, G = any> extends BindingHelper {
+  (type: StateTransformer<S, G>, options?: BindingOptions): VuexDecorator
 }
 
-export interface BindingHelpers {
-  State: StateBindingHelper
+export interface BindingHelpers<S, G> {
+  State: StateBindingHelper<S, G>
   Getter: BindingHelper
   Mutation: BindingHelper
   Action: BindingHelper
 }
 
-export const State = createBindingHelper('computed', mapState) as StateBindingHelper
+export const State = createBindingHelper('computed', mapState) as StateBindingHelper<any, any>
 
 export const Getter = createBindingHelper('computed', mapGetters)
 
@@ -42,7 +42,11 @@ export const Action = createBindingHelper('methods', mapActions)
 
 export const Mutation = createBindingHelper('methods', mapMutations)
 
-export function namespace (namespace: string): BindingHelpers
+export function namespace<H extends BindingHelpers<any, any>>(
+  namespace: string
+): H extends BindingHelpers<infer State, infer G>
+  ? BindingHelpers<State, G>
+  : BindingHelpers<any, any>
 export function namespace <T extends BindingHelper> (
   namespace: string,
   helper: T
