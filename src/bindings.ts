@@ -9,7 +9,7 @@ import {
 
 export type VuexDecorator = <V extends Vue> (proto: V, key: string) => void
 
-export type StateTransformer<S, G> = (state: S, getters: G) => any
+export type StateTransformer<S = any, G = any> = (state: S, getters: G) => any
 
 export type MapHelper = typeof mapState | typeof mapGetters
   | typeof mapActions | typeof mapMutations

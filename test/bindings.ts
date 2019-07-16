@@ -77,7 +77,7 @@ describe('binding helpers', () => {
           state: {
             real: 1,
             imaginary: 2
-          } as FooState,
+          } as FooState
         }
       }
     })
