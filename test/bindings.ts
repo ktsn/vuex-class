@@ -8,7 +8,8 @@ import {
   Getter,
   Action,
   Mutation,
-  namespace
+  namespace,
+  BindingHelpers
 } from '../src/bindings'
 
 Vue.config.productionTip = false
@@ -62,28 +63,48 @@ describe('binding helpers', () => {
   })
 
   it('State: namespace', () => {
+    type ComplexNumber = {
+      real: number
+      imaginary: number
+    }
+
+    type FooState = ComplexNumber
+
     const store = new Vuex.Store({
       modules: {
         foo: {
           namespaced: true,
-          state: { value: 1 }
+          state: {
+            real: 1,
+            imaginary: 2
+          } as FooState
         }
       }
     })
 
-    const foo = namespace('foo')
+    const foo = namespace<BindingHelpers<FooState, any>>('foo')
 
     @Component
     class MyComp extends Vue {
-      @foo.State('value')
+      @foo.State('real')
       bar: number
 
-      @foo.State value: number
+      @foo.State real: number
+
+      @foo.State((state) => {
+        return {
+          real: -state.real,
+          imaginary: -state.imaginary
+        }
+      })
+      negative: ComplexNumber
     }
 
     const c = new MyComp({ store })
     assert(c.bar === 1)
-    assert(c.value === 1)
+    assert(c.real === 1)
+    assert(c.negative.real === -1)
+    assert(c.negative.imaginary === -2)
   })
 
   it('Getter: type', () => {
