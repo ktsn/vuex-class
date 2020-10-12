@@ -165,11 +165,11 @@ describe('binding helpers', () => {
       }
     })
 
-    const ById = () => Getter("byId", { args: [2] });
+    const ById = (id: number) => Getter("byId", { args: [id] });
 
     @Component
     class MyComp extends Vue {
-      @ById() foo: string;
+      @ById(2) foo: string;
     }
 
     const c = new MyComp({ store })
@@ -256,11 +256,11 @@ describe('binding helpers', () => {
 
     const foo = namespace('foo')
 
-    const ById = () => foo.Getter('byId', { args: [2] })
+    const ById = (id: number) => foo.Getter('byId', { args: [id] })
 
     @Component
     class MyComp extends Vue {
-      @ById()
+      @ById(2)
       baz: string
     }
 
