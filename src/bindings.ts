@@ -50,7 +50,8 @@ const curriedMapGetters = <R>(args: any[]) => {
 
     const mappedGetters = (mapGetters as any)(...mapArgs)
 
-    const entries: ([string, any])[] = Object.keys(mappedGetters).map(k => ([k, mappedGetters[k]]))
+
+    const entries: ([string, any])[] = Object.keys(mappedGetters).map<[string, any]>(k => ([k, mappedGetters[k]]))
 
     return entries.reduce(
         (acc, [getter, fn]) => ({
