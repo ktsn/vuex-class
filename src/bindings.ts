@@ -1,10 +1,12 @@
+// tslint:disable: linebreak-style
 import Vue from 'vue'
 import { createDecorator } from 'vue-class-component'
 import {
   mapState,
   mapGetters,
   mapActions,
-  mapMutations
+  mapMutations,
+  Dictionary
 } from 'vuex'
 
 export type VuexDecorator = <V extends Vue> (proto: V, key: string) => void
@@ -15,7 +17,8 @@ export type MapHelper = typeof mapState | typeof mapGetters
   | typeof mapActions | typeof mapMutations
 
 export interface BindingOptions {
-  namespace?: string
+  namespace?: string,
+  args?: any[]
 }
 
 export interface BindingHelper {
@@ -36,7 +39,34 @@ export interface BindingHelpers {
 
 export const State = createBindingHelper('computed', mapState) as StateBindingHelper
 
-export const Getter = createBindingHelper('computed', mapGetters)
+
+const curriedMapGetters = <R>(args: any[]) => {
+
+  function map(map: string[]): Dictionary<R>
+  function map(map: Dictionary<string>): Dictionary<R>
+  function map(namespace: string, map: string[]): Dictionary<R>
+  function map(namespace: string, map: Dictionary<string>): Dictionary<R>
+  function map(...mapArgs: any[]): Dictionary<R> {
+
+
+    const mappedGetters = (mapGetters as any)(...mapArgs);
+
+    const entries: ([string, any])[] = Object.keys(mappedGetters).map(k => ([k, mappedGetters[k]]))
+
+    return entries.reduce(
+        (acc, [getter, fn]) => ({
+        ...acc,
+        [getter]: (state: any) =>
+            fn.call(state)(...(Array.isArray(args) ? args : [args]))
+        }),
+        {}
+    )
+  }
+
+  return map
+}
+
+export const Getter = createBindingHelper('computed', mapGetters, curriedMapGetters)
 
 export const Action = createBindingHelper('methods', mapActions)
 
@@ -77,7 +107,7 @@ export function namespace <T extends BindingHelper> (
 
   return {
     State: createNamespacedHelper(State as any),
-    Getter: createNamespacedHelper(Getter as any),
+    Getter: createNamespacedHelper(createBindingHelper('computed', mapGetters, curriedMapGetters) as any),
     Mutation: createNamespacedHelper(Mutation as any),
     Action: createNamespacedHelper(Action as any)
   }
@@ -85,15 +115,20 @@ export function namespace <T extends BindingHelper> (
 
 function createBindingHelper (
   bindTo: 'computed' | 'methods',
-  mapFn: MapHelper
+  mapFn: MapHelper,
+  curriedMapFn?: (...args: any[]) => MapHelper
 ): BindingHelper {
-  function makeDecorator (map: any, namespace: string | undefined) {
+  function makeDecorator (map: any, namespace: string | undefined, args: any[] = []) {
     return createDecorator((componentOptions, key) => {
       if (!componentOptions[bindTo]) {
         componentOptions[bindTo] = {}
       }
 
       const mapObject = { [key]: map }
+
+      if (args.length > 0 && curriedMapFn) {
+        mapFn = curriedMapFn(args)
+      }
 
       componentOptions[bindTo]![key] = namespace !== undefined
         ? mapFn(namespace, mapObject)[key]
@@ -111,8 +146,9 @@ function createBindingHelper (
     }
 
     const namespace = extractNamespace(b)
+    const args = extractArgs(b)
     const type = a
-    return makeDecorator(type, namespace)
+    return makeDecorator(type, namespace, args)
   }
 
   return helper
@@ -130,6 +166,16 @@ function extractNamespace (options: BindingOptions | undefined): string | undefi
   }
 
   return n
+}
+
+function extractArgs(options: BindingOptions | undefined): any[] {
+  const args = options && options.args
+
+  if (args != null) {
+    return args
+  }
+
+  return []
 }
 
 function merge <T, U> (a: T, b: U): T & U {
