@@ -1,4 +1,3 @@
-// tslint:disable: linebreak-style
 import Vue from 'vue'
 import { createDecorator } from 'vue-class-component'
 import {
@@ -49,7 +48,7 @@ const curriedMapGetters = <R>(args: any[]) => {
   function map(...mapArgs: any[]): Dictionary<R> {
 
 
-    const mappedGetters = (mapGetters as any)(...mapArgs);
+    const mappedGetters = (mapGetters as any)(...mapArgs)
 
     const entries: ([string, any])[] = Object.keys(mappedGetters).map(k => ([k, mappedGetters[k]]))
 
