@@ -60,6 +60,77 @@ export class MyComp extends Vue {
 }
 ```
 
+### Curried Getters
+
+You might have a getter that returns a curried function in order to pass in parameters to your getter. E.g.:
+
+```ts
+const store = {
+  state: {
+    values: [
+      { id: 1, value: "value 1" },
+      { id: 2, value: "value 2" }
+    ]
+  },
+  getters: {
+    byId: state => id => state.values.filter(v => v.id === id)[0].value
+  }
+}
+
+```
+
+You could bind this getter to a function on your component class:
+
+```ts
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import {
+  Getter
+} from 'vuex-class'
+
+
+@Component
+export class MyComp extends Vue {
+
+  @Getter("byId") byId: (id: number) => string;
+}
+```
+
+But you might have a static value that you want to bind to. In which case you can pass this to the args property of the binding options object:
+
+```ts
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import {
+  Getter
+} from 'vuex-class'
+
+
+@Component
+export class MyComp extends Vue {
+
+  @Getter("byId", { args: [1] }) value: string;
+}
+```
+
+You might want to encapsulate this into your own decorator so you can strongly type the arguments:
+
+```ts
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import {
+  Getter
+} from 'vuex-class'
+
+const ByIdGetter = (id: number) => @Getter("byId", { args: [id] })
+
+@Component
+export class MyComp extends Vue {
+
+  @ByIdGetter(1) byId: (id: number) => string;
+}
+```
+
 ## Issue Reporting Guideline
 
 ### Questions

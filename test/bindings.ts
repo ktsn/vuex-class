@@ -102,6 +102,8 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     assert(c.bar === 2)
+    store.state.value = 2;
+    assert(c.bar === 3)
   })
 
   it('Getter: implicit getter type', () => {
@@ -119,6 +121,59 @@ describe('binding helpers', () => {
 
     const c = new MyComp({ store })
     assert(c.foo === 2)
+  })
+
+  it('Getter: with arguments', () => {
+    const store = new Vuex.Store({
+      state: {
+        values: [
+          { id: 1, value: "a" },
+          { id: 2, value: "b" }
+        ]
+      },
+      getters: {
+        byId: state => (id: number) => {
+          return state.values.filter(v => v.id === id)[0].value
+        }
+      }
+    })
+
+    @Component
+    class MyComp extends Vue {
+      @Getter("byId", { args: [1] }) foo: string;
+    }
+
+    const c = new MyComp({ store })
+    assert(c.foo === "a");
+
+    store.state.values[0].value = "c"
+    assert(c.foo === "c");
+  })
+
+  it('Getter: with arguments encapsulated', () => {
+    const store = new Vuex.Store({
+      state: {
+        values: [
+          { id: 1, value: "a" },
+          { id: 2, value: "b" }
+        ]
+      },
+      getters: {
+        byId: state => (id: number) => {
+          return state.values.filter(v => v.id === id)[0].value
+        }
+      }
+    })
+
+    const ById = (id: number) => Getter("byId", { args: [id] });
+
+    @Component
+    class MyComp extends Vue {
+      @ById(2) foo: string;
+    }
+
+    const c = new MyComp({ store })
+    assert(c.foo === "b");
   })
 
   it('Getter: namespace', () => {
@@ -149,6 +204,70 @@ describe('binding helpers', () => {
     assert(c.bar === 2)
   })
 
+  it('Getter: namespace with parameters', () => {
+    const store = new Vuex.Store({
+      modules: {
+        foo: {
+          namespaced: true,
+          state: {
+            values: [
+              { id: 1, value: "a" },
+              { id: 2, value: "b" }
+            ]
+          },
+          getters: {
+            byId: (state: { values: ({ id: number, value: string})[] }) => (id: number) =>
+              state.values.filter(v => v.id === id)[0].value
+          }
+        }
+      }
+    })
+
+    const foo = namespace('foo')
+
+    @Component
+    class MyComp extends Vue {
+      @foo.Getter('byId', { args: [1] })
+      baz: string
+    }
+
+    const c = new MyComp({ store })
+    assert(c.baz === "a")
+  })
+
+  it('Getter: namespace with parameters encapsulated', () => {
+    const store = new Vuex.Store({
+      modules: {
+        foo: {
+          namespaced: true,
+          state: {
+            values: [
+              { id: 1, value: "a" },
+              { id: 2, value: "b" }
+            ]
+          },
+          getters: {
+            byId: (state: { values: ({ id: number, value: string})[] }) => (id: number) =>
+              state.values.filter(v => v.id === id)[0].value
+          }
+        }
+      }
+    })
+
+    const foo = namespace('foo')
+
+    const ById = (id: number) => foo.Getter('byId', { args: [id] })
+
+    @Component
+    class MyComp extends Vue {
+      @ById(2)
+      baz: string
+    }
+
+    const c = new MyComp({ store })
+    assert(c.baz === "b")
+  })
+
   it('Action: type', () => {
     const spy = sinon.spy()
 
@@ -169,7 +288,7 @@ describe('binding helpers', () => {
     assert.deepStrictEqual(spy.getCall(0).args[1], { value: 1 })
   })
 
-  it('Action: implicity action type', () => {
+  it('Action: implicit action type', () => {
     const spy = sinon.spy()
 
     const store = new Vuex.Store({
